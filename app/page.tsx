@@ -10,7 +10,7 @@ export default async function HomePage() {
     .select('role, task');
 
   const countMap = new Map<string, number>();
-  rawCounts?.forEach((row) => {
+  rawCounts?.forEach((row: { role: string; task: string }) => {
     const key = `${row.role}__${row.task}`;
     countMap.set(key, (countMap.get(key) ?? 0) + 1);
   });

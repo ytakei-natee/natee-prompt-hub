@@ -38,9 +38,9 @@ export default async function SearchPage({ searchParams }: Props) {
       .eq('user_id', user.id)
       .in(
         'prompt_id',
-        prompts.map((p) => p.id)
+        prompts.map((p: any) => p.id)
       );
-    likedSet = new Set(likes?.map((l) => l.prompt_id) ?? []);
+    likedSet = new Set(likes?.map((l: any) => l.prompt_id) ?? []);
   }
 
   return (

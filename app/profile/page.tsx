@@ -30,7 +30,7 @@ export default async function ProfilePage() {
     .select('prompt_id')
     .eq('user_id', user.id);
 
-  const likedIds = likedRecords?.map((l) => l.prompt_id) ?? [];
+  const likedIds = likedRecords?.map((l: { prompt_id: string }) => l.prompt_id) ?? [];
   let likedPrompts: any[] = [];
   if (likedIds.length) {
     const { data } = await supabase
@@ -75,7 +75,7 @@ export default async function ProfilePage() {
           </h2>
           <div className="space-y-4">
             {myPrompts?.length ? (
-              myPrompts.map((p) => (
+              myPrompts.map((p: any) => (
                 <PromptCard key={p.id} prompt={p} liked={likedSet.has(p.id)} />
               ))
             ) : (
@@ -91,7 +91,7 @@ export default async function ProfilePage() {
           </h2>
           <div className="space-y-4">
             {likedPrompts.length ? (
-              likedPrompts.map((p) => (
+              likedPrompts.map((p: any) => (
                 <PromptCard key={p.id} prompt={p} liked={true} />
               ))
             ) : (

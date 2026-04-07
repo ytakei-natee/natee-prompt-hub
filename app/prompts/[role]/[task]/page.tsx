@@ -33,13 +33,13 @@ export default async function PromptListPage({ params }: Props) {
 
   let likedSet = new Set<string>();
   if (user && prompts?.length) {
-    const promptIds = prompts.map((p) => p.id);
+    const promptIds = prompts.map((p: any) => p.id);
     const { data: likes } = await supabase
       .from('likes')
       .select('prompt_id')
       .eq('user_id', user.id)
       .in('prompt_id', promptIds);
-    likedSet = new Set(likes?.map((l) => l.prompt_id) ?? []);
+    likedSet = new Set(likes?.map((l: any) => l.prompt_id) ?? []);
   }
 
   return (
@@ -97,7 +97,7 @@ export default async function PromptListPage({ params }: Props) {
         {/* Prompt cards */}
         <div className="space-y-5">
           {prompts?.length ? (
-            prompts.map((prompt, i) => (
+            prompts.map((prompt: any, i: number) => (
               <div key={prompt.id} className={`animate-fade-up delay-${Math.min(i + 1, 5)}`}>
                 <PromptCard prompt={prompt} liked={likedSet.has(prompt.id)} />
               </div>
