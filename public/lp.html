@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Natee Prompt Hub</title>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter','Helvetica Neue','Noto Sans JP',sans-serif;color:#1a1a1a;background:#fff;line-height:1.7;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* ===== TYPOGRAPHY ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Noto+Sans+JP:wght@200;300;400;500;700&display=swap');
+
+/* ===== UTILITY ===== */
+.container{max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,80px)}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 0;transition:all .4s cubic-bezier(.4,0,.2,1)}
+nav.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(0,0,0,.06);padding:16px 0}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo svg{height:28px;width:auto}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:13px;font-weight:400;letter-spacing:.02em;color:#666;transition:color .3s}
+.nav-links a:hover{color:#1a1a1a}
+.nav-cta{font-size:13px;font-weight:500;background:#1a1a1a;color:#fff;padding:10px 28px;border-radius:100px;transition:all .3s cubic-bezier(.4,0,.2,1)}
+.nav-cta:hover{background:#333;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:140px 0 100px}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg::before{content:'';position:absolute;top:-20%;right:-10%;width:80vw;height:80vw;border-radius:50%;background:radial-gradient(circle,rgba(200,210,255,.35) 0%,rgba(240,235,255,.2) 40%,transparent 70%);filter:blur(60px);animation:float 20s ease-in-out infinite}
+.hero-bg::after{content:'';position:absolute;bottom:-10%;left:-5%;width:60vw;height:60vw;border-radius:50%;background:radial-gradient(circle,rgba(255,220,200,.25) 0%,rgba(255,240,230,.15) 40%,transparent 70%);filter:blur(60px);animation:float 25s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.05)}}
+.hero .container{position:relative;z-index:1;display:flex;align-items:center;gap:80px}
+.hero-content{flex:1;max-width:600px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;letter-spacing:.06em;color:#888;text-transform:uppercase;margin-bottom:32px;padding:8px 16px;border-radius:100px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.6)}
+.hero-badge span{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(36px,5.5vw,72px);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:28px}
+.hero h1 .gradient{background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:clamp(15px,1.8vw,18px);font-weight:300;color:#666;line-height:1.8;margin-bottom:48px;max-width:480px}
+.hero-actions{display:flex;align-items:center;gap:24px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:500;background:#1a1a1a;color:#fff;padding:16px 36px;border-radius:100px;transition:all .4s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer}
+.btn-primary:hover{background:#333;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.btn-primary svg{width:16px;height:16px;transition:transform .3s}
+.btn-primary:hover svg{transform:translateX(3px)}
+.btn-ghost{font-size:14px;font-weight:400;color:#888;transition:color .3s}
+.btn-ghost:hover{color:#1a1a1a}
+.hero-visual{flex:1;position:relative;display:flex;justify-content:center}
+.hero-mockup{width:100%;max-width:500px;border-radius:20px;background:linear-gradient(145deg,#f8f9ff 0%,#f0f0f8 100%);padding:32px;box-shadow:0 40px 80px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04);position:relative}
+.mockup-header{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.mockup-dot{width:10px;height:10px;border-radius:50%;background:#e0e0e0}
+.mockup-dot:nth-child(1){background:#ff5f57}
+.mockup-dot:nth-child(2){background:#ffbd2e}
+.mockup-dot:nth-child(3){background:#28ca42}
+.mockup-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mockup-col-header{padding:10px 8px;border-radius:8px;text-align:center;font-size:11px;font-weight:600;color:#fff;letter-spacing:.02em}
+.mockup-col-header.sales{background:#3b82f6}
+.mockup-col-header.planner{background:#0d9488}
+.mockup-col-header.director{background:#7c3aed}
+.mockup-col-header.casting{background:#b45309}
+.mockup-cell{padding:8px;border-radius:6px;background:rgba(0,0,0,.03);font-size:9px;color:#888;text-align:center}
+
+/* ===== FEATURES ===== */
+.features{padding:140px 0;position:relative}
+.features::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.06),transparent)}
+.section-label{font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:16px}
+.section-title{font-size:clamp(28px,3.5vw,48px);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:20px}
+.section-desc{font-size:16px;font-weight:300;color:#888;max-width:500px;line-height:1.7;margin-bottom:72px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feature-card{padding:40px 32px;border-radius:20px;background:#fafafa;border:1px solid rgba(0,0,0,.04);transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#667eea,#764ba2);opacity:0;transition:opacity .4s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.06);border-color:rgba(0,0,0,.08)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{width:48px;height:48px;border-radius:14px;background:#fff;border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.feature-icon svg{width:22px;height:22px;stroke:#555;stroke-width:1.5;fill:none}
+.feature-card h3{font-size:17px;font-weight:600;margin-bottom:12px;letter-spacing:-.01em}
+.feature-card p{font-size:14px;color:#888;line-height:1.7;font-weight:300}
+
+/* ===== STATS ===== */
+.stats{padding:120px 0;position:relative;background:linear-gradient(180deg,#fafbff 0%,#f5f3ff 50%,#fff5f5 100%)}
+.stats .container{text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:72px}
+.stat-item{text-align:center}
+.stat-number{font-size:clamp(36px,5vw,56px);font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,#1a1a1a 0%,#555 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-unit{font-size:14px;font-weight:300;color:#aaa;letter-spacing:.02em}
+.stat-label{font-size:13px;color:#888;font-weight:400;margin-top:4px}
+.trust-logos{display:flex;align-items:center;justify-content:center;gap:48px;margin-top:80px;flex-wrap:wrap;opacity:.4}
+.trust-logos span{font-size:14px;font-weight:500;letter-spacing:.05em;color:#999}
+
+/* ===== VISUAL / SHOWCASE ===== */
+.showcase{padding:160px 0;position:relative;overflow:hidden}
+.showcase .container{display:flex;align-items:center;gap:80px}
+.showcase-content{flex:1}
+.showcase-visual{flex:1.2;position:relative;perspective:1000px}
+.showcase-card{width:100%;max-width:560px;border-radius:24px;background:linear-gradient(145deg,#fff 0%,#f8f9ff 100%);padding:40px;box-shadow:0 60px 120px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);transform:rotateY(-8deg) rotateX(3deg);transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.showcase-card:hover{transform:rotateY(-3deg) rotateX(1deg)}
+.showcase-card-header{display:flex;align-items:center;gap:12px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid rgba(0,0,0,.06)}
+.showcase-card-header .role-badge{padding:6px 14px;border-radius:100px;font-size:11px;font-weight:600;color:#fff;background:#3b82f6}
+.showcase-card-header .task-name{font-size:14px;font-weight:500;color:#555}
+.showcase-section{margin-bottom:20px}
+.showcase-section-label{font-size:11px;font-weight:600;letter-spacing:.04em;color:#bbb;text-transform:uppercase;margin-bottom:8px}
+.showcase-section-body{font-size:13px;color:#666;line-height:1.7;font-weight:300;padding:16px;border-radius:12px;background:rgba(0,0,0,.02)}
+.showcase-actions{display:flex;gap:10px;margin-top:24px}
+.showcase-btn{padding:8px 18px;border-radius:100px;font-size:12px;font-weight:500;border:1px solid rgba(0,0,0,.1);color:#666;display:flex;align-items:center;gap:6px;transition:all .3s}
+.showcase-btn:hover{border-color:#1a1a1a;color:#1a1a1a}
+.showcase-btn.liked{background:#fff0f0;border-color:#fca5a5;color:#ef4444}
+
+/* ===== CTA ===== */
+.cta{padding:160px 0;text-align:center;position:relative}
+.cta::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.06),transparent)}
+.cta h2{font-size:clamp(32px,4.5vw,60px);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:24px}
+.cta p{font-size:17px;font-weight:300;color:#888;margin-bottom:56px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cta .btn-primary{font-size:16px;padding:18px 44px}
+
+/* ===== FOOTER ===== */
+footer{padding:60px 0;border-top:1px solid rgba(0,0,0,.06)}
+footer .container{display:flex;align-items:center;justify-content:space-between}
+.footer-logo svg{height:22px}
+.footer-text{font-size:12px;color:#bbb;font-weight:300}
+
+/* ===== ANIMATIONS ===== */
+.fade-up{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.4,0,.2,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.stagger-1{transition-delay:.1s}
+.stagger-2{transition-delay:.2s}
+.stagger-3{transition-delay:.3s}
+.stagger-4{transition-delay:.4s}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .hero .container{flex-direction:column;text-align:center}
+  .hero-content{max-width:100%}
+  .hero p{margin-left:auto;margin-right:auto}
+  .hero-actions{justify-content:center}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .showcase .container{flex-direction:column}
+  .showcase-content{text-align:center}
+  .showcase-card{transform:rotateY(-4deg) rotateX(2deg)}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .features-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-mockup{padding:20px}
+  .mockup-cell{font-size:8px;padding:6px 4px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 95V30L45 5h145v90H10z" stroke="#1a1a1a" stroke-width="5" fill="none"/>
+        <text x="22" y="82" font-family="Inter,Helvetica Neue,sans-serif" font-size="52" font-weight="700" fill="#1a1a1a">Natee</text>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a href="#features">機能</a>
+      <a href="#stats">実績</a>
+      <a href="#showcase">使い方</a>
+      <a href="#cta" class="nav-cta">はじめる</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge fade-up">
+        <span></span>
+        Natee 社内ツール
+      </div>
+      <h1 class="fade-up stagger-1">
+        プロンプトを<br><span class="gradient">共有する文化</span>を。
+      </h1>
+      <p class="fade-up stagger-2">
+        職種ごとの業務に最適化されたプロンプトを、<br>
+        チーム全員で蓄積し、磨き上げる。
+      </p>
+      <div class="hero-actions fade-up stagger-3">
+        <a href="#cta" class="btn-primary">
+          Prompt Hubをはじめる
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual fade-up stagger-4">
+      <div class="hero-mockup">
+        <div class="mockup-header">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-grid">
+          <div class="mockup-col-header sales">Sales</div>
+          <div class="mockup-col-header planner">Planner</div>
+          <div class="mockup-col-header director">Director</div>
+          <div class="mockup-col-header casting">Casting</div>
+          <div class="mockup-cell">クライアント<br>リサーチ</div>
+          <div class="mockup-cell">企画骨子<br>ブレスト</div>
+          <div class="mockup-cell">キャスティング<br>評価</div>
+          <div class="mockup-cell">選定軸<br>整理</div>
+          <div class="mockup-cell">アポ前<br>準備</div>
+          <div class="mockup-cell">競合調査</div>
+          <div class="mockup-cell">撮影<br>指示書</div>
+          <div class="mockup-cell">候補<br>リサーチ</div>
+          <div class="mockup-cell">議事録<br>整理</div>
+          <div class="mockup-cell">ブリーフ<br>分解</div>
+          <div class="mockup-cell">クリエイター<br>打診文</div>
+          <div class="mockup-cell">推薦文<br>作成</div>
+          <div class="mockup-cell">提案書<br>構成</div>
+          <div class="mockup-cell">KPI設計</div>
+          <div class="mockup-cell">進行管理</div>
+          <div class="mockup-cell">交渉<br>メール</div>
+          <div class="mockup-cell">競合分析</div>
+          <div class="mockup-cell">レポート</div>
+          <div class="mockup-cell">納品<br>チェック</div>
+          <div class="mockup-cell">デモグラ<br>分析</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-label fade-up">Features</div>
+    <h2 class="section-title fade-up stagger-1">
+      業務に溶け込む、<br>プロンプト基盤。
+    </h2>
+    <p class="section-desc fade-up stagger-2">
+      使い捨てだったプロンプトが、チームの資産に変わる。
+    </p>
+    <div class="features-grid">
+      <div class="feature-card fade-up stagger-1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <h3>職種 × 業務で整理</h3>
+        <p>Sales・Planner・Director・Castingの4職種 × 各5業務。直感的に見つかるグリッド構造。</p>
+      </div>
+      <div class="feature-card fade-up stagger-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>
+        </div>
+        <h3>ワンクリックでコピー</h3>
+        <p>使いたいプロンプトを見つけたら、ボタン一つでクリップボードへ。すぐにAIに投入できる。</p>
+      </div>
+      <div class="feature-card fade-up stagger-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <h3>いいねで磨く</h3>
+        <p>良いプロンプトにいいねが集まり、自然と最適解が上に浮かぶ。チームの知恵が可視化される。</p>
+      </div>
+      <div class="feature-card fade-up stagger-1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>コメントで改善</h3>
+        <p>使ってみた感想や改善案をコメントで共有。プロンプトが日々進化する仕組み。</p>
+      </div>
+      <div class="feature-card fade-up stagger-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </div>
+        <h3>横断検索</h3>
+        <p>キーワードで全プロンプトを横断検索。職種を超えたナレッジの再発見を促す。</p>
+      </div>
+      <div class="feature-card fade-up stagger-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>誰でも投稿</h3>
+        <p>新人もベテランも、見つけたベストプラクティスを即座に共有。民主的なナレッジ基盤。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="stats">
+  <div class="container">
+    <div class="section-label fade-up">Traction</div>
+    <h2 class="section-title fade-up stagger-1" style="text-align:center">
+      Nateeの実績が、<br>プロンプトの質を証明する。
+    </h2>
+    <div class="stats-grid">
+      <div class="stat-item fade-up stagger-1">
+        <div class="stat-number">20.8</div>
+        <div class="stat-unit">億円</div>
+        <div class="stat-label">7期売上</div>
+      </div>
+      <div class="stat-item fade-up stagger-2">
+        <div class="stat-number">80</div>
+        <div class="stat-unit">名+</div>
+        <div class="stat-label">チームメンバー</div>
+      </div>
+      <div class="stat-item fade-up stagger-3">
+        <div class="stat-number">20</div>
+        <div class="stat-unit">種</div>
+        <div class="stat-label">初期プロンプト</div>
+      </div>
+      <div class="stat-item fade-up stagger-4">
+        <div class="stat-number">4</div>
+        <div class="stat-unit">職種</div>
+        <div class="stat-label">完全カバー</div>
+      </div>
+    </div>
+    <div class="trust-logos fade-up">
+      <span>Unilever</span>
+      <span>Kenvue</span>
+      <span>花王</span>
+      <span>楽天</span>
+      <span>Coca-Cola</span>
+      <span>Panasonic</span>
+      <span>ロート製薬</span>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE -->
+<section class="showcase" id="showcase">
+  <div class="container">
+    <div class="showcase-content">
+      <div class="section-label fade-up">How it works</div>
+      <h2 class="section-title fade-up stagger-1">
+        選んで、コピーして、<br>使うだけ。
+      </h2>
+      <p class="section-desc fade-up stagger-2">
+        グリッドから業務を選択すると、そのタスクに最適化されたプロンプトが一覧表示。ワンクリックでコピーしてAIに貼り付けるだけ。
+      </p>
+    </div>
+    <div class="showcase-visual fade-up stagger-3">
+      <div class="showcase-card">
+        <div class="showcase-card-header">
+          <div class="role-badge">Sales</div>
+          <div class="task-name">クライアントリサーチ</div>
+        </div>
+        <div class="showcase-section">
+          <div class="showcase-section-label">役割設定</div>
+          <div class="showcase-section-body">
+            あなたはブランドマーケティングを専門とする戦略コンサルタントです。消費財・コスメ・ヘルスケア領域に精通し...
+          </div>
+        </div>
+        <div class="showcase-section">
+          <div class="showcase-section-label">タスク</div>
+          <div class="showcase-section-body">
+            1. 企業概要<br>2. 競争環境<br>3. 経営課題の仮説<br>4. マーケティング課題の仮説...
+          </div>
+        </div>
+        <div class="showcase-actions">
+          <div class="showcase-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            コピー
+          </div>
+          <div class="showcase-btn liked">
+            ♥ 12
+          </div>
+          <div class="showcase-btn">
+            💬 3
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="container">
+    <h2 class="fade-up">
+      チームの知恵を、<br>ひとつの場所に。
+    </h2>
+    <p class="fade-up stagger-1">
+      Natee Prompt Hubで、AI活用の属人化を終わらせる。
+    </p>
+    <a href="#" class="btn-primary fade-up stagger-2">
+      Prompt Hubをはじめる
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">
+      <svg viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:22px">
+        <path d="M10 95V30L45 5h145v90H10z" stroke="#ccc" stroke-width="5" fill="none"/>
+        <text x="22" y="82" font-family="Inter,Helvetica Neue,sans-serif" font-size="52" font-weight="700" fill="#ccc">Natee</text>
+      </svg>
+    </div>
+    <div class="footer-text">© 2026 Natee, Inc. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Scroll animation (Intersection Observer)
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
